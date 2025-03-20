@@ -1,11 +1,46 @@
-# This is a default, demo config used by our testing.
+# Scalingo MTV configuration
+data_dir = "/tmp"
 
 [sources.scalingo]
-type = "syslog"
+type = "http_server"
 address = "0.0.0.0:${PORT}"
-mode = "tcp"
+auth.strategy = "basic"
+auth.password = "${LOGDRAIN_USER_PASSWORD}"
+auth.username = "${LOGDRAIN_USER_NAME}"
+decoding.codec = "vrl"
+decoding.vrl.source = ". = parse_key_value!(.message)"
 
-[sinks.debug]
-type = "console"
+[transforms.access]
+type = "remap"
 inputs = ["scalingo"]
-targets = ["stdout"]
+source = """
+.duration = parse_duration!(.duration, "s")
+.bytes = to_int!(.bytes)
+.status = to_int!(.status)
+.ip = del(.from)
+.endpoint = del(.path)
+.requested_at = del(.timestamp)
+del(.container)
+del(.protocol)
+del(.referer)
+del(.request_id)
+del(.source_type)
+"""
+
+# Uncomment the following section to display tranformed logs to the
+# application logs before sending them to another sink
+#
+# [sinks.debug]
+# type = "console"
+# inputs = ["access"]
+# target = "stdout"
+# encoding.codec = "json"
+
+[sinks.timescaledb]
+type = "postgres"
+inputs = ["access"]
+endpoint = "${SCALINGO_POSTGRESQL_URL}"
+table = "router"
+
+## TODO
+## Add tests
