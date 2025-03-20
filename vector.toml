@@ -1,0 +1,11 @@
+# This is a default, demo config used by our testing.
+
+[sources.scalingo]
+type = "syslog"
+address = "0.0.0.0:${PORT}"
+mode = "tcp"
+
+[sinks.debug]
+type = "console"
+inputs = ["scalingo"]
+targets = ["stdout"]

@@ -1,0 +1,3 @@
+# QualiCharge logs
+
+TODO
