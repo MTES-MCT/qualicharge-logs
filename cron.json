@@ -1,0 +1,8 @@
+{
+  "jobs": [
+    {
+      "command": "0 8 * * * dbclient-fetcher psql && psql $SCALINGO_POSTGRESQL_URL -f data_retention_procedure.sql",
+      "size": "S"
+    }
+  ]
+}
