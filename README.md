@@ -82,7 +82,9 @@ CREATE TABLE router (
 And table indexes:
 
 ```sql
-CREATE INDEX ON router (host, user_agent, method, endpoint, requested_at DESC);
+CREATE INDEX ON router (method, endpoint);
+CREATE INDEX ON router (host);
+CREATE INDEX ON router (user_agent);
 ```
 
 As we are dealing with time-series, it's time to unleash TimescaleDB! To do so,
