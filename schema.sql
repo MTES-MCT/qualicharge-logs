@@ -12,7 +12,9 @@ CREATE TABLE router (
 );
 
 -- Create indexes
-CREATE INDEX ON router (host, user_agent, method, endpoint, requested_at DESC);
+CREATE INDEX ON router (method, endpoint);
+CREATE INDEX ON router (host);
+CREATE INDEX ON router (user_agent);
 
 -- Make the router table an hypertable indexed by `requested_at`
 SELECT create_hypertable('router', by_range('requested_at'));
